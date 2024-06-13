@@ -12,7 +12,7 @@ specialty = ['Family Practice', 'OBGYN', 'Cardiology', 'Pediatrics',
 def submit():
     """Define what happens when you click Predict."""
     # Placeholder for the model prediction
-    predicted_amount = predict_claim()  # Dummy prediction for illustration
+    predicted_amount = 100000  # Dummy prediction for illustration
     mean_absolute_error = 3000  # Placeholder mean absolute error
     lowest_amount = predicted_amount - mean_absolute_error
     highest_amount = predicted_amount + mean_absolute_error
