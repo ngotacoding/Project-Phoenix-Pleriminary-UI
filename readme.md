@@ -45,7 +45,7 @@ If you prefer using a conda environment, note that `streamlit_option_menu` is no
 
 1. **Create a conda environment**:
     ```bash
-    conda create --name myenv python=3.10
+    conda create --name myenv python=3.12
     conda activate myenv
     ```
 

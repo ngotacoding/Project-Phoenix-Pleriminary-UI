@@ -10,6 +10,7 @@ st.set_page_config(page_title="Omdena Personal Injury Claims Prediction",
                    page_icon='',
                    layout='wide')
 
+
 def main():
     col1, col2 = st.columns((.5, 2))
 

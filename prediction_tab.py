@@ -1,109 +1,141 @@
 import streamlit as st
+import numpy as np
+from model_utils import predict_claim
+import plotly.graph_objects as go
+
+specialty = ['Family Practice', 'OBGYN', 'Cardiology', 'Pediatrics',
+             'Internal Medicine', 'Anesthesiology', 'Emergency Medicine',
+             'Ophthamology', 'Urological Surgery', 'Orthopedic Surgery',
+             'Neurology/Neurosurgery', 'Occupational Medicine', 'Resident',
+             'Thoracic Surgery', 'General Surgery', 'Radiology', 'Pathology',
+             'Physical Medicine', 'Plastic Surgeon', 'Dermatology']
 
 def submit():
     """Define what happens when you click Predict."""
     # Placeholder for the model prediction
-    predicted_amount = 10000  # Dummy prediction for illustration
-    mean_absolute_error = 3000 # Placeholder mean absolute error
+    predicted_amount = predict_claim()  # Dummy prediction for illustration
+    mean_absolute_error = 3000  # Placeholder mean absolute error
     lowest_amount = predicted_amount - mean_absolute_error
     highest_amount = predicted_amount + mean_absolute_error
     st.session_state["predicted_amount"] = predicted_amount
     st.session_state["highest_amount"] = highest_amount
     st.session_state["lowest_amount"] = lowest_amount
     st.session_state["form_submitted"] = True
-    
+
+def reset():
+    """Reset the form."""
+    st.session_state["current_step"] = "Step 1"
+    st.session_state["form_submitted"] = False
+    for key in ['severity', 'specialty', 'insurance', 'age', 'gender', 'marital_status', 'private_attorney']:
+        st.session_state[key] = None
+
 def next_step(step):
     """Proceed to the next step of the form."""
     st.session_state["current_step"] = step
 
-def back():
+def back_to_confirm():
     """Define what happens when you click Back."""
     # Define back button behavior to return to the form
     st.session_state["form_submitted"] = False
-    st.session_state["current_step"] = 1
+    st.session_state["current_step"] = "Step 3"
 
-# Function to display the main form in steps
-def show_form():
-    """Display the main form for inputting details to estimate the settlement value of a personal injury case."""
-    if "current_step" not in st.session_state:
-        st.session_state["current_step"] = 1
+def step_1():
+    st.title(":green[Predict your Claim amount]")
+    st.subheader("Step 1 of 3")
+    with st.container(border=1):
+        st.subheader(":orange[Personal Details]")
+        st.session_state['age'] = st.number_input("Age", min_value=0, max_value=120, value=18)
+        st.session_state['gender'] = st.selectbox("Gender", ["Male", "Female"])
+        st.session_state['marital_status'] = st.selectbox("Marital Status", [0, 1, 2, 3, 4], format_func=lambda x: ["Divorced", "Single", "Married", "Widowed", "Unknown"][x])
+        st.session_state['private_attorney'] = st.selectbox("Nature of Attorney", [0, 1], format_func=lambda x: "Private" if x == 1 else "Not Private")
+        
+    st.button("Next", key="next1", type='primary', on_click=next_step, args=['Step 2'])
 
-    step = st.session_state["current_step"]
+def step_2():
+    st.title(":green[Predict your Claim amount]")
+    st.subheader("Step 2 of 3")
+    with st.container(border=1):
+        st.subheader(":orange[Injury & Medical Details]")
+        st.session_state['severity'] = st.slider("Severity of Injury", 1, 9, help="Rating of damage from 1 (emotional trauma) to 9 (death)")
+        st.session_state['specialty'] = st.selectbox("Specialty of Physician Seen", specialty)
+        st.session_state['insurance'] = st.selectbox("Medical Insurance Type", ["Private", "Unknown", "Medicare/Medicaid", "No Insurance", "Workers Compensation"])
     
-    st.title("Predict your Claim amount")
-    st.subheader(f"Step {step} of 4")
+    cols = st.columns(9)
+    with cols[0]:
+        st.button("Previous", key="prev2", on_click=next_step, args=['Step 1'])
+        
+    with cols[1]:
+        st.button("Next", key="next1", type='primary', on_click=next_step, args=['Step 3'])
+    
+def step_3():
+    st.title(":green[Predict your Claim amount]")
+    st.subheader("Step 3 of 3: Confirm Your Details")
+    with st.container(border=1):
+        st.subheader(":orange[Personal Details]")
+        st.write(f"**Age:** {st.session_state.get('age')}")
+        st.write(f"**Gender:** {st.session_state.get('gender')}")
+        st.write(f"**Marital Status:** {['Divorced', 'Single', 'Married', 'Widowed', 'Unknown'][st.session_state.get('marital_status')]}")
+        st.write(f"**Nature of Attorney:** {'Private' if st.session_state.get('private_attorney') == 1 else 'Not Private'}")
+        
+        st.subheader(":orange[Injury & Medical Details]")
+        st.write(f"**Severity of Injury:** {st.session_state.get('severity')}")
+        st.write(f"**Specialty of Physician Seen:** {st.session_state.get('specialty')}")
+        st.write(f"**Medical Insurance Type:** {st.session_state.get('insurance')}")
+        
+        
+    cols = st.columns(9)
+    with cols[0]:
+        st.button("Previous", key="prev3", on_click=next_step, args=['Step 2'])
+        
+    with cols[1]:
+        st.button("Predict", key="predict", type='primary', on_click=submit)
 
-    if step == 1:
-        with st.form("injury_details_form"):
-            st.header("Injury Details")
-            injury_type = st.selectbox("Injury Type", ["Type 1", "Type 2", "Type 3"])
-            injury_severity = st.slider("Injury Severity", 0, 10)
-            next_button = st.form_submit_button("Next", on_click=lambda: next_step(2))
-
-    elif step == 2:
-        with st.form("medical_treatment_form"):
-            st.header("Medical Treatment Information")
-            medical_procedures = st.multiselect("Medical Procedures", ["Procedure 1", "Procedure 2", "Procedure 3"])
-            medications_prescribed = st.multiselect("Medications Prescribed", ["Medication 1", "Medication 2", "Medication 3"])
-            hospitalization_duration = st.number_input("Hospitalization Duration (days)", min_value=0)
-            next_button = st.form_submit_button("Next", on_click=lambda: next_step(3))
-
-    elif step == 3:
-        with st.form("legal_claim_form"):
-            st.header("Legal and Claim Information")
-            law_firm = st.text_input("Law Firm Name")
-            lawyer_experience = st.number_input("Lawyer Experience (years)", min_value=0)
-            settlement_offer = st.number_input("Initial Settlement Offer ($)", min_value=0)
-            next_button = st.form_submit_button("Next", on_click=lambda: next_step(4))
-
-    elif step == 4:
-        with st.form("personal_geographic_form"):
-            st.header("Personal and Geographic Information")
-            claimant_age = st.number_input("Claimant Age", min_value=0)
-            claimant_gender = st.selectbox("Claimant Gender", ["Male", "Female", "Other"])
-            claimant_state = st.selectbox("Claimant State", ["State 1", "State 2", "State 3", "State 4", "State 5"])
-            submit_button = st.form_submit_button("Predict", on_click=submit)
-
-# Function to display the prediction and chatbot UI
 def show_prediction():
     """Display the prediction result after form submission."""
-    
-    # Title
-    st.title("Prediction Result")
-    
-    # Get predicted claim amount from session state
+    st.title(":green[Prediction Result]")
     predicted_amount = st.session_state.get("predicted_amount", 0)
     highest_amount = st.session_state.get("highest_amount", 0)
     lowest_amount = st.session_state.get("lowest_amount", 0)
 
-    # Show prediction result
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("Estimated Claim Amount")
-        st.metric(label="Claim Amount", value=f"${predicted_amount:,.2f}")
+        #st.subheader("Estimated Claim Amount")
+        st.metric(label=":blue[Estimated Claim Amount]", value=f"${predicted_amount:,.2f}")
     
     with col2:
-        st.subheader("Acceptable Range")
-        st.metric(label="Claim Range", value=f"${lowest_amount:,.2f} - ${highest_amount:,.2f}")
+        #st.subheader("Acceptable Range")
+        st.metric(label=":blue[Acceptable claim Range]", value=f"${lowest_amount:,.2f} - ${highest_amount:,.2f}")
 
     st.divider()
-    # Sample chatbot UI
-    st.subheader("Chat with the Result")
+    st.subheader(":green[Chat with the Result]")
     user_input = st.text_input("Ask a question:")
     if user_input:
         response = f"Model response to: '{user_input}'"
         st.write(response)
     
-    # Define back button
-    back_button = st.button("Back", on_click=back)
+    cols = st.columns(6)
+    with cols[0]:
+        st.button("Back to Confirm Details", on_click=back_to_confirm)
+        
+    with cols[1]:
+        st.button("New Prediction", type='primary', on_click=reset)
 
-# Main section for the prediction tab
 def display_prediction():
-    """Defines the display behavior of the prediction tab."""
+    if "current_step" not in st.session_state:
+        st.session_state["current_step"] = "Step 1"
     if "form_submitted" not in st.session_state:
         st.session_state["form_submitted"] = False
 
     if st.session_state["form_submitted"]:
         show_prediction()
     else:
-        show_form()
+        current_step = st.session_state["current_step"]
+        if current_step == "Step 1":
+            step_1()
+        elif current_step == "Step 2":
+            step_2()
+        elif current_step == "Step 3":
+            step_3()
+
+if __name__ == "__main__":
+    display_prediction()
