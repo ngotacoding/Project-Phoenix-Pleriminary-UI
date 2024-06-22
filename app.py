@@ -6,12 +6,17 @@ from prediction_tab import display_prediction
 from team_tab import display_team
 from PIL import Image
 
+# Default page configurations
 st.set_page_config(page_title="Omdena Personal Injury Claims Prediction",
                    page_icon='',
                    layout='wide')
 
-
+# Function to define the outlook of the whole web app
 def main():
+    """Define the outlook of the web app.
+    """
+    
+    # Area above tabs
     col1, col2 = st.columns((.5, 2))
 
     with col1:

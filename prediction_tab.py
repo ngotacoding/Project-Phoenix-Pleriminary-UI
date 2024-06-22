@@ -2,78 +2,66 @@ import streamlit as st
 import numpy as np
 from model_utils import predict_claim
 
+# Function to define what happens when you click submit
 def submit():
     """Define what happens when you click Submit.
     """
     
-   # Define form data
-    form_data = {
-        'age': st.session_state.age,
-        'policy_state': st.session_state.policy_state,
-        'policy_csl': st.session_state.policy_csl,
-        'umbrella_limit': st.session_state.umbrella_limit,
-        'insured_sex': st.session_state.insured_sex,
-        'accident_type': st.session_state.accident_type,
-        'collision_type': st.session_state.collision_type,
-        'incident_severity': st.session_state.incident_severity,
-        'authorities_contacted': st.session_state.authorities_contacted,
-        'state': st.session_state.state,
-        'property_damage': st.session_state.property_damage,
-        'bodily_injuries': st.session_state.bodily_injuries,
-        'police_report_available': st.session_state.police_report_available,
-        'auto_make': st.session_state.auto_make,
-        'total_claim_amount': 1,
-        'injury_claim': 1
-    }
-    
     # Predict the Total Claim Amount
-    predicted_amount = predict_claim(form_data)
+    predicted_amount = predict_claim()
     
-    mean_absolute_error = 3000
-    lowest_amount = predicted_amount - mean_absolute_error
-    highest_amount = predicted_amount + mean_absolute_error
+    # Root Mean Squared Error from modelling team
+    rmse = 14423
+    
+    # Calculate the claim range
+    lowest_amount = predicted_amount - rmse
+    highest_amount = predicted_amount + rmse
     st.session_state["predicted_amount"] = predicted_amount
     st.session_state["highest_amount"] = highest_amount
-    st.session_state["lowest_amount"] = lowest_amount
+    st.session_state["lowest_amount"] = lowest_amount if lowest_amount > 0 else 0
     st.session_state["form_submitted"] = True
-    
+
+# Function to define back button behavior
 def back():
     """Define what happens when you click Back.
     """
-    # Define back button behavior to return to the form
     st.session_state["form_submitted"] = False
 
-# Function to display the main form
+# Function to define the main form    
 def show_form():
+    """Define the outlook of the main form.
     """
-    Display the main form for inputting details to estimate the settlement value of a personal injury case.
-    """
-
-    # Title and Description
+    
     st.title(":green[Predict your Claim amount]")
-
-    # Form Section
-    with st.form("claim_form"):
+    
+    with st.container(border=1):
         
+        # Demographic and Geographic Information
+        st.header("Demographic and Geographic Information")
         st.session_state['age'] = st.number_input("Age", min_value=0, max_value=120, value=18)
+        st.session_state['insured_sex'] = st.selectbox('Sex', ['MALE', 'FEMALE'])
+        st.session_state['state'] = st.selectbox('State', ['NY', 'VA', 'WV', 'NC', 'SC', 'PA', 'OH'])
+        
+        # Accident and Injury Details Section
+        st.header("Accident and Injury Details")
+        st.session_state['accident_type'] = st.selectbox('Accident Type', ['Multi-vehicle Collision', 'Vehicle Theft', 'Single Vehicle Collision', 'Parked Car']) 
+        st.session_state['auto_make'] = st.selectbox('Auto Make', ['Dodge', 'Accura', 'Nissan', 'Audi', 'Toyota', 'Saab', 'Ford', 'Suburu', 'BMW', 'Jeep', 'Mercedes', 'Honda', 'Volkswagen', 'Chevrolet'])
+        st.session_state['collision_type'] = st.selectbox('Collision Type', ['Rear Collision', 'Front Collision', 'Side Collision'])
+        st.session_state['incident_severity'] = st.selectbox('Incident Severity', ['Trivial Damage', 'Minor Damage', 'Major Damage', 'Total Loss'])
+        st.session_state['property_damage'] = st.selectbox('Property Damage', ['YES', 'NO'])
+        st.session_state['bodily_injuries'] = st.number_input('Bodily Injuries', min_value=0, max_value=2, step=1)
+        st.session_state['authorities_contacted'] = st.selectbox('Authorities Contacted', ['Police', 'Other', 'Fire', 'Ambulance'])
+        st.session_state['police_report_available'] = st.selectbox('Police Report Available', ['YES', 'NO'])
+        
+        # Insurance Information
+        st.header("Insurance Details")
         st.session_state['policy_state'] = st.selectbox('Policy State', ['OH', 'IL', 'IN'])  
         st.session_state['policy_csl'] = st.selectbox('Policy CSL', ['100/300', '500/1000', '250/500'])  
         st.session_state['umbrella_limit'] = st.selectbox('Umbrella Limit', [5000000, 6000000, 0, 4000000, 3000000, 8000000, 7000000, 9000000, -1000000, 2000000, 10000000])  
-        st.session_state['insured_sex'] = st.selectbox('Insured Sex', ['MALE', 'FEMALE'])
-        st.session_state['accident_type'] = st.selectbox('Accident Type', ['Multi-vehicle Collision', 'Vehicle Theft', 'Single Vehicle Collision', 'Parked Car']) 
-        st.session_state['collision_type'] = st.selectbox('Collision Type', ['Rear Collision', 'Front Collision', 'Side Collision'])
-        st.session_state['incident_severity'] = st.selectbox('Incident Severity', ['Minor Damage', 'Total Loss', 'Major Damage', 'Trivial Damage'])
-        st.session_state['authorities_contacted'] = st.selectbox('Authorities Contacted', ['Police', 'Other', 'Fire', 'Ambulance'])
-        st.session_state['state'] = st.selectbox('State', ['NY', 'VA', 'WV', 'NC', 'SC', 'PA', 'OH'])
-        st.session_state['property_damage'] = st.selectbox('Property Damage', ['YES', 'NO'])
-        st.session_state['bodily_injuries'] = st.number_input('Bodily Injuries', min_value=0, max_value=2, step=1)
-        st.session_state['police_report_available'] = st.selectbox('Police Report Available', ['YES', 'NO'])
-        st.session_state['auto_make'] = st.selectbox('Auto Make', ['Dodge', 'Accura', 'Nissan', 'Audi', 'Toyota', 'Saab', 'Ford', 'Suburu', 'BMW', 'Jeep', 'Mercedes', 'Honda', 'Volkswagen', 'Chevrolet'])
         
-        # Submit button for the form
-        submit_button = st.form_submit_button("Submit", on_click=submit, type='primary')
+    st.button("Predict", key="predict", type='primary', on_click=submit)
 
-# Function to display the prediction and chatbot UI
+# Function to display the prediction
 def show_prediction():
     """
     Display the prediction result after form submission.
@@ -98,7 +86,6 @@ def show_prediction():
         st.metric(label="Claim Range", value=f"${lowest_amount:,.2f} - ${highest_amount:,.2f}")
 
     st.divider()
-    st.write()
     back_button = st.button("Back", on_click=back)
 
 # Main section for the prediction tab

@@ -8,7 +8,7 @@ data = {
         "Behnaz Hosseini (Lead)", "Sahar Nikoo", "Chua Shin Ying", "Sri Hari Sivashanmugam",
         "Yani Stancheva (Lead)", "Mariam Mukami Njeru", "Tanvi Thanekar", "Indrajith C (Lead)",
         "Varun Yadav", "Ekoue LOGOSU-TEKO (Lead)", "Krishna Karthik", "David Hartsman",
-        "Nandini K", "Farjana", "Mohit Mishra", "Joseph Ngota (Lead)", "Fahira Hameed",
+        "Nandini K", "Farjana", "Mohit Mishra", "Joseph Ngota Chilo (Lead)", "Fahira Hameed",
         "John Paul Curada", "Khushal Gogia", "Ashwitha Kassetty", "Mohamad Motaz",
         "Ahmed Mostafa Attia"
     ]

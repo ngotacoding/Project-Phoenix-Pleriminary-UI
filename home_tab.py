@@ -1,7 +1,10 @@
 import streamlit as st
 
+# Function to define the content of the main page
 def display_home():
-
+    """Define the outlook of the home page.
+    """
+    
     with st.container():
         
         st.header(':blue[Project Background]')
