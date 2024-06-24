@@ -9,23 +9,26 @@ def display_home():
         
         st.header(':blue[Project Background]')
         st.write("""
-            The goal of this project is to design a streamlined machine learning model that accurately predicts the net settlement values of car accident-related personal injury claims. The model will utilize a concise set of easily accessible data points, ensuring both efficiency and reliability in its predictions. It specifically addresses settlements from car accidents and focuses on achieving credible results with minimal data.
-        """)
+            In the United States of America (USA), victims of personal injuries depend on personal injury lawyers to secure settlements from insurance companies. These victims are often disadvantaged as insurers use advanced algorithms like Colossus to propose minimal settlement amounts based on extensive data analysis. On the other hand, personal injury lawyers typically rely on their own experiences and limited data, lacking the sophisticated analytical tools available to insurers. This imbalance can lead to lower settlements for the victims (plaintiffs) as lawyers struggle to match the data-driven insights that insurance companies use to their advantage. The disparity highlights the need for a reliable and transparent method to predict settlement values, ensuring that the victims receive fair compensation for their injuries.
+            """)
 
-        st.header(':blue[Problem Statement]')
+        st.header(':blue[Project Objectives]')
         st.write("""
-            In the U.S., victims of car accidents depend on personal injury lawyers to secure equitable settlements from insurance companies. This process often disadvantages plaintiffs, as insurers employ advanced algorithms like Colossus to propose minimal settlement amounts based on extensive data analysis. In contrast, personal injury lawyers typically rely on their own experiences and limited data, lacking comparable analytical tools.
-        """)
+            The primary objective of this project is to transform the estimation of personal injury case values in the United States by developing a predictive data model. This model aims to provide a reliable tool that supplements the expertise of legal professionals, offering a more objective basis for case valuation. Leveraging the model will empower legal professionals with better tools for negotiation and help plaintiffs secure fair and just compensation for their injuries.
+            """)
 
         st.header(':blue[How Personal Injury Cases Work]')
         st.write("""
-            Liability in personal injury cases determines who is legally at fault for causing harm. Plaintiffs must prove that the defendant's negligence or intentional actions caused their injuries. Compensation covers two types of damages: economic (quantifiable financial losses such as medical bills and lost wages) and non-economic (subjective impacts like pain and suffering). Successfully claiming these requires demonstrating both liability and the extent of damages, often with legal assistance.
-            This often involves assessing future pain. 
+            Liability in personal injury cases determines who is at fault for causing harm. Plaintiffs must prove that the negligence or intentional actions of the defendant caused their injuries. Compensation covers two types of damages: economic (quantifiable financial losses such as medical bills and lost wages) and non-economic (subjective impacts like future pain and suffering). 
             
-            Assessing future pain involves evaluating medical opinions on long-term injury impacts, including chronic pain and lifestyle restrictions. Lawyers use this information to predict how pain will affect a client’s daily life and future well-being. Estimating monetary compensation for future pain involves expert medical testimony and personal evidence, like pain journals, which help in negotiating with insurance companies.
-        """)
+            Future pain refers to the ongoing physical and emotional suffering that an individual will endure in the future due to an injury or condition that has already occurred. Assessing future pain involves evaluating medical opinions on long-term injury impacts, including chronic pain and lifestyle restrictions. Lawyers use this information to predict how pain will affect a client’s daily life and future well-being. Estimating monetary compensation for future pain involves expert medical testimony and personal evidence, like pain journals, which help when negotiating with insurance companies. 
+            
+            Hence, successfully claiming compensation requires demonstrating both liability and the extent of damages, economic or non-economic, often with legal assistance.
+            
+            
+            """)
 
-        st.header(':blue[Important Questions in Evaluating a Personal Injury Case]')
+        st.subheader(':blue[Important Questions in Evaluating a Personal Injury Case]')
         st.write("""
             Critical inquiries in personal injury evaluations include:
             - When and where did the accident occur?
@@ -38,6 +41,20 @@ def display_home():
             - How has the injury affected your daily activities and quality of life?
         """)
 
-        st.subheader(':blue[Project Objectives and Datasets]')
+        st.header(':blue[Facts claimants must know about making Insurance claims]')
         st.write("""
-            The goals for this project were to create an ML model with at least 60% accuracy, and building a front-end to interact with the model. """)
+           When making an insurance claim, one of the most critical factors that claimants must be aware of is the statute of limitations. The statute of limitations sets the maximum period within which a claimant can initiate legal proceedings from the date of the incident or injury. Failing to file a claim within this period can result in losing the right to seek compensation, regardless of the validity.
+        """)
+        st.subheader(':blue[Understanding the Statute of Limitations]')
+        st.write("""
+            1. The statute of limitations can vary significantly depending on the jurisdiction and the type of claim. Therefore, claimants should familiarize themselves with the limits to their case in their legal area to ensure they file their claim on time.
+            
+            2. Once the statute of limitations has expired, the claimant typically loses the right to file a lawsuit. Hence, even if the evidence supporting the claim is strong, the court will not consider the case, barring the claimant from seeking compensation.
+            
+            3. There may be exceptions or extensions to the statute of limitations in certain situations, such as instances where the claimant was a minor at the time of the injury or if the injury was not immediately discoverable.
+
+            Given the critical nature of the statute of limitations, claimants should take prompt action after an injury or incident, including gathering evidence, seeking legal advice, and filing the necessary paperwork as soon as possible to avoid any issues with timing.
+            It is recommended to consult with legal professionals in personal injury and insurance claims for guidance and ensure claimants take the necessary steps within the required time frame.
+
+        """)
+    
